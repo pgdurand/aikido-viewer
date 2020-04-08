@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Aikido - FFAB</title><meta charset="utf-8">
+		<link rel="stylesheet" href="./css/jquery-ui.min.css"  type="text/css">
+        <script type="text/javascript" src="./js/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="./js/jquery-ui-1.11.1.min.js"></script>
+
+        <script type="text/javascript">
+ $(function() {
+
+ $('.helpButton').each(function() {  
+    $.data(this, 'dialog', 
+      $('.helpDialog').dialog({
+        autoOpen: false,  
+        modal: true,  
+        title: 'Aikido-FFAB',  
+        draggable: true,
+        show : "slide",
+        hide : "puff",
+        open : function (event)
+		  {
+		    var msg = "<img src='";
+		    msg +=$('.helpDialog').data('mymessage');
+		    msg +="'>";
+		    $(this).html (msg);
+		  },
+		close : function (event)
+		  {
+		    $('.helpDialog').removeData('mymessage');
+		  }    
+      })
+    );  
+   }).click(function() {
+      $('.helpDialog').data('mymessage', $(this).attr('href'));
+      $.data(this, 'dialog').dialog('open');  
+      return false;  
+   }); //end .each()
+ });//end function()
+        </script>
+	</head>
+    <body>
+
+<a href="./aikido_images/formes/suwari_waza.gif" class="helpButton">[x]</a>
+<a href="./aikido_images/formes/tachi_waza.gif" class="helpButton">[x]</a>
+
+<div class="helpDialog">Dialog content goes here...</div>
+
+
+    </body>
+</html>

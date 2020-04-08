@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Aikido - FFAB</title><meta charset="utf-8">
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript" src="./js/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="./js/d3.v3.min.js" charset="utf-8"></script>
+        <script type="text/javascript" src="./js/keshif.min.js" charset="utf-8"></script>
+        <link rel="stylesheet" href="./css/keshif.css" type="text/css">
+        <link rel="stylesheet" href="./font-awesome/css/font-awesome.min.css">
+
+        <script type="text/javascript" src="./js/demo.js" charset="utf-8"></script>
+        <link rel="stylesheet" href="./css/style.css" type="text/css">
+
+        <script type="text/javascript">
+$(document).ready(function() {
+    new kshf.Browser({
+        domID : "#aikidoDiv",
+        categoryTextWidth: 200,
+        source : {
+            gdocId : '1CFJNkNVFPMY56m9fS77ruS7vjccbQ5jS58nC9O77Rlk',
+            sheets : [ {name:"Catalogue"},{name:"Attaques"},{name:"Formes"},{name:"Techniques"},{name:"Gardes"},{name:"Examens"} ]
+        },
+        loadedCb: function(){
+            catCols = kshf.dt_ColNames.Catalogue;
+            atCols = kshf.dt_ColNames.Attaques;
+            foCols = kshf.dt_ColNames.Formes;
+            teCols = kshf.dt_ColNames.Techniques;
+            gaCols = kshf.dt_ColNames.Gardes;
+            exCols = kshf.dt_ColNames.Examens;
+        },
+        facets: [
+            {
+                facetTitle: "Forme",
+                catTableName: "Formes",
+                no_resort: true,
+                description: "Forme de travail de Uke et Tori.",
+                catLabelText: function(cat){ return cat.data[foCols.Forme]; }
+            },
+            {
+                facetTitle: "Attaque",
+                catTableName: "Attaques",
+                no_resort: true,
+                description: "Attaque réalisée par Uke.",
+                catLabelText: function(cat){ return cat.data[atCols.Attaque]; }
+            },
+            {
+                facetTitle: "Technique",
+                catTableName: "Techniques",
+                no_resort: true,
+                forceSearch: false,
+                description: "Technique (projection, immobilisation) réalisée par Tori.",
+                catLabelText: function(cat){ return cat.data[teCols.Technique]; }
+            },
+            {
+                facetTitle: "Garde",
+                catTableName: "Gardes",
+                no_resort: true,
+                description: "Garde lors de la réalisation de l'attaque.",
+                catLabelText: function(cat){ return cat.data[gaCols.Garde]; }
+            },
+            {
+                facetTitle: "Grade",
+                catTableName: "Examens",
+                no_resort: true,
+                description: "Techniques à connaître pour les passages de grades Kyu.",
+                catLabelText: function(cat){ return cat.data[exCols.Grade]; }
+            }
+        ],
+        itemDisplay: {
+            sortColWidth: 45,
+            sortingOpts : [ {name: 'id', inverse: true} ],
+            displayType : "list",
+            textSearch : 'Nom',
+            detailsToggle : "One",
+            contentFunc : function(d) {
+                var str="";
+
+                var forme = kshf.dt_id.Formes[d.data[catCols.Forme]].data[foCols.Forme];
+                var formeTrad = kshf.dt_id.Formes[d.data[catCols.Forme]].data[foCols.FR];
+
+                var attaqueTrad = kshf.dt_id.Attaques[d.data[catCols.Attaque]].data[atCols.FR];
+				var technique = kshf.dt_id.Techniques[d.data[catCols.Technique]].data[teCols.Technique];
+                var techniqueTrad = kshf.dt_id.Techniques[d.data[catCols.Technique]].data[teCols.FR];
+                var gardeTrad = kshf.dt_id.Gardes[d.data[catCols.Garde]].data[gaCols.FR];
+                
+                var attaque = d.data[catCols.Nom];
+                attaque = attaque.substring(0, attaque.indexOf(technique)-1);
+
+                str+="<div class=''>";
+                str+="<span class='formeS'>"+forme+"</span> ";
+                str+="<span class='attackS'>"+attaque+"</span> "+technique;
+                str+="</div>";
+                
+                str+="<span class='item_details'>";
+                str+="<div class='topics'>";
+                str+=" " + formeTrad;
+                str+="</div>";
+                str+="<div class='topics'>";
+                str+=" " + attaqueTrad;
+                str+="</div>";
+                str+="<div class='topics'>";
+                str+=" " + techniqueTrad;
+                str+="</div>";
+                str+="<div class='topics'>";
+                str+=" " + gardeTrad;
+                str+="</div>";
+                str+="</span>";
+                
+                return str;
+            }
+        }
+    });
+});
+        </script>
+        <style>
+.item_details{
+    margin-left: 5px;
+}
+.topics{
+    font-size: 0.9em;
+    font-weight: 300;
+    margin-left: 5px;
+    font-variant: small-caps;
+}
+/*color picker: http://jscolor.com/ */
+.formeS{
+	color: #0E1AC2;//#02CCE3;
+}
+.attackS{
+	color: #9B02C2;
+}
+       #aikidoDiv { margin-left: 50px; height: 700px; width: 950px; }
+       #referenceDiv { margin-left: 50px;}
+        </style>
+	</head>
+    <body>
+        <div id="aikidoDiv"></div>
+        <div style="font-size: 14px; margin-left: 50px;  width: 950px;">
+<p style="margin-top: 10px;font-weight: bold;">Comment utiliser le visualiseur ?</p>
+
+<p>A droite, il y a le "Catalogue", c'est-à-dire la liste des techniques d'Aikido. L'icône <img src="/aikido/img/arrow_down.png"/> à gauche 
+de chaque technique permet d'en donner quelques explications.</p>
+
+<p>A gauche, nous avons des panneaux qui permettent de filtrer la vue de droite. Par exemple, si on ne veut voir que les techniques en "Tachi Waza", 
+il suffit de cliquer sur ce terme dans le panneau "Forme". Il est possible d'appliquer plusieurs critères simultanément; ainsi pour ne voir que les techniques 
+"Tachi Waza / Jodan Tsuki", il suffit alors de cliquer sur "Tachi Waza" dans le panneau "Forme" et ensuite sur "Jodan Tsuki" dans le panneau "Attaque" 
+(ou l'inverse, peu importe le sens). </p>
+
+<p>A chaque fois qu'un filtre est appliqué, il peut être enlevé de trois manières :</p>
+<ul>
+<li>1. en cliquant sur l'icône "X" située à gauche du titre d'un panneau de critères ;</li>
+<li>2. en cliquant à nouveau sur le terme qui a servi de filtre ;</li>
+<li>3. en cliquant sur le nom du filtre qui apparaît en haut de la liste des techniques (sous l'en-tête "Catalogue").</li>
+</ul>
+<p style="margin-top: 10px;font-weight: bold;">Voulez-vous contribuer ?</p>
+<p>Nous souhaiterions associer chaque technique à une vidéo disponible sur le web (Youtube, clubs). Si vous avez des liens à proposer, vous pouvez nous les 
+envoyer (cf. lien Contact ci-dessous), et nous les placerons dans le mémo des techniques.</p>
+<p>&nbsp;</p>
+        </div>
+        <div id="infobox" align="center">
+        <span class="fa fa-info-circle"></span> Techniques d'Aikido, d'après le livre "Aikido - technique tome 1 - 4e édition" édité par la FFAB-Aikikai de France.
+        <br>Mise en forme P. Durand, Club Elvinoise d'Aïkido. <i class="fa fa-comments"></i> <a href="mailto:patrick@plealog.com?subject=guide aikido">Contact</a>
+        </div>
+    </body>
+</html>
